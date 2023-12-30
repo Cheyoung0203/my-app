@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
   const [counter, setValue] = useState(0);
   const onClick = () => setValue((prev) => prev + 1);
-  console.log("call an api");
+  console.log("I run all the time");
+  // 처음 시작할 때 한번만 실행되는 코드
+  useEffect(() => {
+    console.log("Call the API");
+  }, []);
   return (
     <div>
       <h1>{counter}</h1>
@@ -14,10 +18,8 @@ function App() {
 
 export default App;
 
-/**
- * state를 변경할 때 모든 code들은 항상 다시 실행된다.
- *
- * 하지만 component 내부의 몇몇 코드는 처음 rendering될 때만 코드가 실행되길 원할 수 있다.
- * example
- * API를 통해 데이터를 가져올 때
+/** useEffect
+ * 두 개의 argument를 가지는 function
+ * 1st argument: 처음에 딱 한번만 실행되고 그 이후로는 절대 실행되지 않는 코드
+ * 2nd argument: magic(나중에....) - 첫 번째 방법으로인해 발생하는 문제를 보고 살펴보도록 하자
  */
