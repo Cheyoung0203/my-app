@@ -41,7 +41,7 @@ export default App;
  * keyword가 변하는 즉, onChange event가 발생할 때만 search console을 re-rendering하는 방법은 무엇일까?
  * 특정 이벤트(부분)만 발생했을 때 원하는 코드들을 실행시키는 방법은 무엇일까?
  *
- * 만약, 변수 keyword가 변화할 때 코드를 실행하고 싶다면, 2nd 배열 자리에 keyword를 적어준다.
+ * 만약, 변수 keyword가 변화할 때 코드를 실행하고 싶다면, 2nd argument(즉, dependecy 지켜보는자)인 배열 자리에 keyword를 적어준다.
  *
  * 처음 시작할 때 아무것도 search하지 않았음에도 keyword를 검색했으므로 조건을 추가하자
  * 1. keyword가 ""일 때를 제외하고 검색한다.
