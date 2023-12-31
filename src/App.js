@@ -1,51 +1,33 @@
 import { useState, useEffect } from "react";
 
-function App() {
-  const [counter, setValue] = useState(0);
-  const [keyword, setKeyword] = useState("");
-  const onClick = () => setValue((prev) => prev + 1);
-  const onChange = (event) => setKeyword(event.target.value);
-  // 처음 시작할 때 한번만 실행되는 코드
+function Hello() {
   useEffect(() => {
-    console.log("I run only once");
+    console.log("hi :)");
+    return () => console.log("bye :(");
   }, []);
+  return <h1>Hello</h1>;
+}
 
-  useEffect(() => {
-    if (keyword !== "" && keyword.length > 6) {
-      console.log("I run when 'keyword' changes", keyword);
-    }
-  }, [keyword]);
-
-  useEffect(() => {
-    if (counter !== 0) {
-      console.log("I run when 'counter' changes.");
-    }
-  }, [counter]);
+function App() {
+  const [showing, setShowing] = useState(false);
+  const onClick = () => setShowing((prev) => !prev);
   return (
     <div>
-      <input
-        value={keyword}
-        onChange={onChange}
-        type="text"
-        placeholder="Search here..."
-      />
-      <h1>{counter}</h1>
-      <button onClick={onClick}>click me</button>
+      {showing ? <Hello /> : null}
+      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
     </div>
   );
 }
 
 export default App;
 
-/** 언제 코드가 실행될지 결정하는 방법을 배워보자
- * keyword가 변하는 즉, onChange event가 발생할 때만 search console을 re-rendering하는 방법은 무엇일까?
- * 특정 이벤트(부분)만 발생했을 때 원하는 코드들을 실행시키는 방법은 무엇일까?
+/** Clean up function
+ * Component가 파괴될때는 return값을 실행한다.
+ * hiFn을 실행한 후 해당 컴포넌트가 파괴될 때 return 값인 byFn을 실행한다.
  *
- * 만약, 변수 keyword가 변화할 때 코드를 실행하고 싶다면, 2nd argument(즉, dependecy 지켜보는자)인 배열 자리에 keyword를 적어준다.
- *
- * 처음 시작할 때 아무것도 search하지 않았음에도 keyword를 검색했으므로 조건을 추가하자
- * 1. keyword가 ""일 때를 제외하고 검색한다.
- * 2. keyword가 6글자 이상일 때 검색한다.
- *
- * 즉, 2nd argument가 지켜보는 keyword만이 변화할 때 코드를 실행한다.
+ * 결과적으로... 요약
+ * 우리는 `useEffect`함수를 사용하여 코드를 선택적으로 실행할 수 있다.
+ * 1. 처음에 실행하고 다시는 실행하지 않는 방법
+ * 2. dependency에 의존하여 선택적으로 코드를 실행하는 방법
+ * 3. component가 파괴될 때 return 값을 실행하여 코드를 실행하는 방법 (Clean up function)
  */
