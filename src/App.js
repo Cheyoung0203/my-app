@@ -1,46 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
-  const [toDo, setToDO] = useState("");
-  const [toDos, setToDos] = useState([]);
-  const onChange = (event) => setToDO(event.target.value);
+  const [loading, setLoading] = useState(true);
+  const [coins, setCoins] = useState([]);
+  const [dollars, setDollars] = useState(0);
+  const onChange = (event) => {
+    setDollars(event.target.value);
+  };
   const onSubmit = (event) => {
     event.preventDefault();
-    if (toDo === "") {
-      return;
-    }
-    setToDos((currentArr) => [...currentArr, toDo]);
-    setToDO("");
   };
-  console.log(toDos);
-  console.log(toDos.map((item, index) => <li key={index}>{item}</li>));
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers")
+      .then((response) => response.json())
+      .then((json) => {
+        setCoins(json);
+        setLoading(false);
+      });
+  }, []);
   return (
     <div>
-      <h1>My To Dos ({toDos.length})</h1>
+      <h1>The Coins! ({coins.length})</h1>
       <form onSubmit={onSubmit}>
         <input
           onChange={onChange}
-          value={toDo}
-          type="text"
-          placeholder="Write your to do. .."
+          value={dollars}
+          type="number"
+          placeholder="write your money"
         />
-        <button>Add To Do</button>
+        <button>submit dollars</button>
       </form>
-      <hr />
-      <ul>
-        {toDos.map((item, idx) => (
-          <li key={idx}>{item}</li>
+      {loading ? <strong>Loading...</strong> : null}
+      <select>
+        {coins.map((coin, idx) => (
+          <option key={idx}>
+            {coin.name} ({coin.symbol}:{" "}
+            {dollars / Math.floor(coin.quotes.USD.price)} USD)
+          </option>
         ))}
-      </ul>
+      </select>
     </div>
   );
 }
 
-/**
- * state는 직접적으로 수정할 수 없다+
- => toDos.push (불가 X)
- * 따라서 setState 함수를 활용해서 state값을 수정해야 한다.
- * [arr1, ...arr2] === arr1 + arr2
- */
-
 export default App;
+
+/**
+ * API 가져오기
+ * https://api.coinpaprika.com/v1/tickers
+ * fetch와 then에 대하여 공부하기
+ * json() 공부
+ *
+ * challenge => 입력한 USD값을 each coin 단위로 변환해서 display
+ */
